@@ -5,6 +5,7 @@
 
 import * as express from 'express';
 import * as path from 'path';
+import { AuthRoutes } from './app/routes/Auth';
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to api!' });
 });
+
+app.use(AuthRoutes);
 
 const port = process.env.port || 3333;
 const server = app.listen(port, () => {
