@@ -1,7 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import axios from 'axios';
 import { environment } from '../../environments/environment';
 import * as jwt from 'jsonwebtoken';
+
+const axios = require('axios');
 
 const router = Router();
 
@@ -9,10 +10,10 @@ router.get('/github/authorize', async (req: Request, res: Response) => {
   const { query } = req;
   const { code } = query;
 
-  const githubAuthResult = await axios.post(
+  const githubAuthResult = await axios.default.post(
     `https://github.com/login/oauth/access_token?client_id=${environment.clientId}&client_secret=${environment.clientSecret}&code=${code}`,
     null,
-    { headers: { Accept: 'application.json' } }
+    { headers: { Accept: 'application/json' } }
   );
 
   if (!githubAuthResult || !githubAuthResult.data.access_token) {
@@ -22,7 +23,7 @@ router.get('/github/authorize', async (req: Request, res: Response) => {
     });
   }
 
-  const userResponse = await axios.get('https://api.github.com/user', {
+  const userResponse = await axios.default.get('https://api.github.com/user', {
     headers: {
       Authorization: `token ${githubAuthResult.data.access_token}`,
       Accept: 'application/json',
