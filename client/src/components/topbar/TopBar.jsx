@@ -4,7 +4,7 @@ import { Context } from "../../context/Context";
 import { useContext } from "react";
 
 export default function TopBar() {
-    const { user, dispatch } = useContext(Context);
+    const { user, dispatch, PF } = useContext(Context);
 
     const handleLogout = () => {
         dispatch({ type: "LOGOUT" });
@@ -47,7 +47,9 @@ export default function TopBar() {
             </div>
             <div className="topRight">
                 {user ? (
-                    <img className="topImg" src={user.profilePic} alt="Avatar" />
+                    <Link className="link" to="/settings">
+                        <img className="topImg" src={PF + user.profilePic} alt="Avatar" />
+                    </Link>
                 ) : (
                     <ul className="topList">
                         <li className="topListItem">

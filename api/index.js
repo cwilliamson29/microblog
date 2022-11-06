@@ -18,6 +18,7 @@ mongoose
         dbName: "microblog",
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        //useFindAndModify: true,
         //useCreateIndex: true,
     })
     .then(console.log("Connected to mongodb"))
