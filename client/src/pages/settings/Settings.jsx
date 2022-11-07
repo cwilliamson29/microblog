@@ -10,12 +10,40 @@ export default function Settings() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [success, setSuccess] = useState(false);
+
     const { user, PF, dispatch } = useContext(Context);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         dispatch({ type: "UPDATE_START" });
-        setSuccess(false);
+        const updatedUser = {
+            userId: user._id,
+            username,
+            email,
+            password,
+        };
+        if (file) {
+            const data = new FormData();
+            const filename = Date.now() + file.name;
+            data.append("name", filename);
+            data.append("file", file);
+            updatedUser.profilePic = filename;
+            try {
+                await axios.post("/upload", data);
+            } catch (err) {}
+        }
+        try {
+            const res = await axios.put("/users/" + user._id, updatedUser);
+            setSuccess(true);
+            dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
+        } catch (err) {
+            dispatch({ type: "UPDATE_FAILURE" });
+        }
+    };
+    /*const handleSubmit = async (e) => {
+        e.preventDefault();
+        dispatch({ type: "UPDATE_START" });
+        //setSuccess(false);
 
         const updatedUser = {
             userId: user._id,
@@ -35,13 +63,13 @@ export default function Settings() {
             } catch (err) {}
         }
         try {
-            const res = await axios.put(`/users/${user._id}`, updatedUser);
+            const res = await axios.put("/users/" + user._id, updatedUser);
             setSuccess(true);
             dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
         } catch (err) {
             dispatch({ type: "UPDATE_FAILURE" });
         }
-    };
+    };*/
     return (
         <div className="settings">
             <div className="settingsWrapper">
