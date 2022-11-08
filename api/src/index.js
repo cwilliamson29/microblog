@@ -8,12 +8,19 @@ const multer = require("multer");
 const path = require("path");
 const connectToDatabase = require("./database");
 
+app.use(express.json());
+
+app.use("/api", routes);
+
+app.use((err, req, res, next) => {
+    logger.error(err.stack);
+    res.status(err.statusCode || 500).send({ error: err.message });
+});
+
 async function startServer() {
     await connectToDatabase();
 
-    app.use(express.json());
     app.use("/images", express.static(path.join(__dirname, "/images")));
-    app.use("/api", routes);
 
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
